@@ -16,9 +16,9 @@ Files Overview
 # Install Dependencies
 Make sure you have Python installed. Then install Flask. 
 after running the codes it will displays the http://127.0.0.1:5000
-it will show the reddit user info viewer there we have to give the url :  https://www.reddit.com/user/kojied/ 
+it will show the reddit user info viewer where we have to give the url(as mentioned in the assignment).
 it will displays the Username: kojied
 Post Karma: 216
 Comment Karma: 1823
 Cake Day: Fri Jan 03 2020
-Recent Posts and comments. and other url: https://www.reddit.com/user/Hungry-Move-6603/ and it will displays the same details.
+Recent Posts and comments. and other url (as mentioned in the assignment) username: Hungry-Move-6603 and it will displays the same details.
