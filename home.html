@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reddit User Viewer</title>
+</head>
+<body>
+  <h2>Reddit User Info Viewer</h2>
+  <input type="text" id="redditUrl" placeholder="Enter Reddit profile URL" size="50">
+  <button onclick="loadRedditUser()">Load Profile</button>
+  <hr>
+  <div id="output"></div>
+
+  <script>
+    function extractUsername(url) {
+      const match = url.match(/reddit\.com\/user\/([^/]+)/i);
+      return match ? match[1] : null;
+    }
+
+    function loadRedditUser() {
+      const url = document.getElementById("redditUrl").value.trim();
+      const username = extractUsername(url);
+      if (!username) {
+        alert("Please enter a valid Reddit profile URL.");
+        return;
+      }
+
+      const outputDiv = document.getElementById("output");
+      outputDiv.innerHTML = "Loading...";
+
+      // Get profile info
+      fetch(`https://www.reddit.com/user/${username}/about.json`)
+        .then(res => res.json())
+        .then(profileData => {
+          const user = profileData.data;
+          const profileHtml = `
+            <img src="${user.icon_img}" style="width:150px;border-radius:50%;"><br>
+            <strong>Username:</strong> ${user.name}<br>
+            <strong>Post Karma:</strong> ${user.link_karma}<br>
+            <strong>Comment Karma:</strong> ${user.comment_karma}<br>
+            <strong>Cake Day:</strong> ${new Date(user.created_utc * 1000).toDateString()}<br>
+            <hr>
+            <h3>Recent Posts</h3>
+            <div id="posts">Loading posts...</div>
+            <h3>Recent Comments</h3>
+            <div id="comments">Loading comments...</div>
+          `;
+          outputDiv.innerHTML = profileHtml;
+
+          // Get posts
+          fetch(`https://www.reddit.com/user/${username}/submitted.json`)
+            .then(res => res.json())
+            .then(postData => {
+              const posts = postData.data.children.slice(0, 5);
+              const postHtml = posts.map(p => {
+                const post = p.data;
+                return `<div><a href="https://reddit.com${post.permalink}" target="_blank">${post.title}</a> <small>(r/${post.subreddit})</small></div>`;
+              }).join('');
+              document.getElementById("posts").innerHTML = postHtml || "No recent posts.";
+            });
+
+          // Get comments
+          fetch(`https://www.reddit.com/user/${username}/comments.json`)
+            .then(res => res.json())
+            .then(commentData => {
+              const comments = commentData.data.children.slice(0, 5);
+              const commentHtml = comments.map(c => {
+                const com = c.data;
+                return `<div><strong>r/${com.subreddit}</strong>: ${com.body.slice(0, 100)}...<br>
+                        <a href="https://reddit.com${com.permalink}" target="_blank">View Comment</a></div>`;
+              }).join('');
+              document.getElementById("comments").innerHTML = commentHtml || "No recent comments.";
+            });
+
+        })
+        .catch(err => {
+          console.error(err);
+          outputDiv.innerHTML = "Failed to load profile.";
+        });
+    }
+  </script>
+</body>
+</html>

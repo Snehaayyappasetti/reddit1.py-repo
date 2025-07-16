@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Persona for {{ user }}</title>
+</head>
+<body>
+  <h1>Persona for u/{{ user }}</h1>
+
+  <p><strong>Name:</strong> {{ persona.name }}</p>
+  <p><strong>Age:</strong> {{ persona.age }}</p>
+  <p><strong>Occupation:</strong> {{ persona.occupation }}</p>
+  <p><strong>Personality:</strong> {{ persona.personality }}</p>
+  <p><strong>Summary:</strong> {{ persona.summary }}</p>
+
+  <h2>Motivations</h2>
+  <ul>{% for m in persona.motivations %}<li>{{ m }}</li>{% endfor %}</ul>
+
+  <h2>Behavior</h2>
+  <ul>{% for b in persona.behavior %}<li>{{ b }}</li>{% endfor %}</ul>
+
+  <h2>Habits</h2>
+  <ul>{% for h in persona.habits %}<li>{{ h }}</li>{% endfor %}</ul>
+
+  <h2>Goals & Needs</h2>
+  <ul>{% for g in persona.goals_needs %}<li>{{ g }}</li>{% endfor %}</ul>
+
+  <h2>Frustrations</h2>
+  <ul>{% for f in persona.frustrations %}<li>{{ f }}</li>{% endfor %}</ul>
+
+  <h2>Citations</h2>
+  <ul>
+    {% for cite in persona.citations %}
+      <li><strong>{{ cite.category }}</strong>: "{{ cite.source }}"<br>
+      <a href="{{ cite.link }}" target="_blank">View Source</a></li>
+    {% endfor %}
+  </ul>
+
+  <br>
+  <a href="/static/{{ user }}_persona.txt" download>Download Persona as TXT</a><br>
+  <a href="/">← Back</a>
+</body>
+</html>
